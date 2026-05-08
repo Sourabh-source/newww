@@ -44,7 +44,14 @@ export default function LoginPage() {
     })
 
     if (signInError) {
-      setError(signInError.message)
+      // Map common Supabase auth errors to user-friendly messages
+      let errorMessage = signInError.message
+      if (signInError.message.includes("Invalid login credentials")) {
+        errorMessage = "Invalid email or password. Please check your credentials and try again."
+      } else if (signInError.message.includes("Email not confirmed")) {
+        errorMessage = "Please verify your email before logging in. Check your inbox for the confirmation link."
+      }
+      setError(errorMessage)
       setIsLoading(false)
       return
     }

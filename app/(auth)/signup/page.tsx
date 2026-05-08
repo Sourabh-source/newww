@@ -72,7 +72,16 @@ export default function SignupPage() {
     })
 
     if (signUpError) {
-      setError(signUpError.message)
+      // Map common Supabase auth errors to user-friendly messages
+      let errorMessage = signUpError.message
+      if (signUpError.message.includes("User already registered")) {
+        errorMessage = "An account with this email already exists. Please try logging in instead."
+      } else if (signUpError.message.includes("Password should be at least")) {
+        errorMessage = "Password must be at least 6 characters long."
+      } else if (signUpError.message.includes("Invalid email")) {
+        errorMessage = "Please enter a valid email address."
+      }
+      setError(errorMessage)
       setIsLoading(false)
       return
     }
